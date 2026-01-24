@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Controle</title>
+  <style>
+    body {
+      background: black;
+      color: #00ff00;
+      font-family: monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .box {
+      text-align: center;
+      max-width: 400px;
+    }
+    input, button {
+      margin-top: 10px;
+      background: black;
+      color: #00ff00;
+      border: 1px solid #00ff00;
+      padding: 8px;
+      font-family: monospace;
+    }
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="box" id="conteudo"></div>
+
+<script>
+  // ===== CONFIGURAÇÃO =====
+  const senhas = {
+    1: "ALFA",
+    2: "BETA",
+    3: "GAMA"
+  };
+
+  const links = {
+    1: "https://carrd.co/dia1",
+    2: "https://carrd.co/dia2",
+    3: "https://carrd.co/dia3"
+  };
+
+  // ===== ESTADO =====
+  let diaAtual = localStorage.getItem("diaAtual");
+  if (!diaAtual) {
+    diaAtual = 1;
+    localStorage.setItem("diaAtual", diaAtual);
+  } else {
+    diaAtual = parseInt(diaAtual);
+  }
+
+  const container = document.getElementById("conteudo");
+
+  function render() {
+    container.innerHTML = "";
+
+    if (diaAtual > 3) {
+      container.innerHTML = "<h2>PROVA CONCLUÍDA.</h2>";
+      return;
+    }
+
+    const titulo = document.createElement("h2");
+    titulo.textContent = `DIA ${diaAtual}`;
+    container.appendChild(titulo);
+
+    const input = document.createElement("input");
+    input.type = "password";
+    input.placeholder = "Senha do dia";
+    container.appendChild(input);
+
+    const botao = document.createElement("button");
+    botao.textContent = "CONFIRMAR";
+    container.appendChild(botao);
+
+    const erro = document.createElement("div");
+    erro.className = "error";
+    container.appendChild(erro);
+
+    botao.onclick = () => {
+      if (input.value === senhas[diaAtual]) {
+        localStorage.setItem("diaAtual", diaAtual + 1);
+        container.innerHTML = `
+          <p>ACESSO CONCEDIDO.</p>
+          <a href="${links[diaAtual]}" style="color:#00ff00;">IR PARA O ENIGMA</a>
+          <p>Volte amanhã.</p>
+        `;
+      } else {
+        erro.textContent = "Senha incorreta.";
+      }
+    };
+  }
+
+  render();
+</script>
+
+</body>
+</html>
