@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>SISTEMA NÃO</title>
+
+<style>
+body {
+    margin:0;
+    background:#030303;
+    color:#00ff9c;
+    font-family:Courier New, monospace;
+}
+
+.page {
+    display:none;
+    min-height:100vh;
+    justify-content:center;
+    align-items:center;
+}
+
+.active { display:flex; }
+
+.box {
+    width:90%;
+    max-width:900px;
+    border:1px solid #00ff9c;
+    padding:30px;
+    box-shadow:0 0 30px rgba(0,255,156,.25);
+}
+
+h1,h2 {
+    text-align:center;
+    letter-spacing:3px;
+}
+
+input,button {
+    width:100%;
+    padding:12px;
+    margin-top:12px;
+    background:black;
+    color:#00ff9c;
+    border:1px solid #00ff9c;
+}
+
+button {
+    background:#00ff9c;
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.inner {
+    background:radial-gradient(circle at top, #003b2a, #020202 70%);
+    animation:flicker 0.15s infinite alternate;
+}
+
+@keyframes flicker {
+    from { box-shadow:0 0 15px #00ff9c; }
+    to { box-shadow:0 0 30px #00ffaa; }
+}
+
+.link {
+    display:block;
+    margin:20px 0;
+    color:#00ffaa;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.text {
+    white-space:pre-wrap;
+    line-height:1.7;
+    color:#eafff5;
+}
+
+.counter {
+    text-align:center;
+    font-size:0.9em;
+    margin-top:10px;
+    color:#7fffd4;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="login" class="page active">
+    <div class="box">
+        <h1>SISTEMA NÃO</h1>
+        <p>Digite a senha do dia</p>
+        <input type="password" id="senha">
+        <button onclick="entrar()">ENTRAR</button>
+        <div id="contador" class="counter"></div>
+    </div>
+</div>
+
+<!-- CONTEÚDO -->
+<div id="dia" class="page">
+    <div class="box inner">
+        <h2 id="titulo"></h2>
+        <p><strong>PARABÉNS.</strong> DIA CONCLUÍDO.</p>
+        <a id="link" class="link" target="_blank"></a>
+        <div id="texto" class="text"></div>
+    </div>
+</div>
+
+<script>
+// ===== CONFIGURAÇÃO =====
+const dataInicio = new Date("2026-02-01"); // MUDE AQUI se quiser
+
+const dias = [
+{
+senha:"pater noster, qui es in caelis",
+link:"https://elgoog.im/t-rex/",
+frase:`"A oração é a lâmpada da alma."
+— São João Damasceno`
+},
+{
+senha:"sanctificetur nomen tuum",
+link:"https://www.imdb.com/title/tt0816692/",
+frase:`"Santificar o nome de Deus é ordenar o interior."
+— Santo Agostinho`
+},
+{
+senha:"adveniat regnum tuum",
+link:"https://neal.fun/infinite-craft/",
+frase:`"O Reino cresce sem barulho."
+— São Máximo, o Confessor`
+},
+{
+senha:"fiat voluntas tua, sicut in caelo et in terra",
+link:"https://decifra.me/",
+frase:`"A vontade própria é o maior obstáculo."
+— Abade Doroteu de Gaza`
+},
+{
+senha:"panem nostrum cotidianum da nobis hodie",
+link:"https://www.imdb.com/title/tt6751668/",
+frase:`"Nem só de pão vive o homem."
+— Evangelho`
+},
+{
+senha:"et dimitte nobis debita nostra",
+link:"https://radio.garden/",
+frase:`"O perdão cura o tempo."
+— São Gregório Nazianzeno`
+},
+{
+senha:"sicut et nos dimittimus debitoribus nostris",
+link:"https://www.window-swap.com/",
+frase:`"Quem perdoa vê longe."
+— São Efrém, o Sírio`
+},
+{
+senha:"et ne nos inducas in tentationem",
+link:"https://thisissand.com/",
+frase:`"Vigiar é amar."
+— São Isaac, o Sírio`
+},
+{
+senha:"sed libera nos a malo",
+link:"https://www.imdb.com/title/tt0137523/",
+frase:`"O mal perde poder quando é visto."
+— São Basílio Magno`
+},
+{
+senha:"amen",
+link:"https://quickdraw.withgoogle.com/",
+frase:`"Amém é decisão."
+— São Jerônimo`
+},
+{
+senha:"pater noster",
+link:"https://www.youtube.com/watch?v=QkTtN4b9Q0U",
+frase:`"Quem chama Deus de Pai muda de vida."
+— Orígenes`
+},
+{
+senha:"qui es in caelis",
+link:"https://www.play2048.co/",
+frase:`"O céu começa dentro."
+— São Isaac, o Sírio`
+},
+{
+senha:"voluntas tua",
+link:"https://www.imdb.com/title/tt0118715/",
+frase:`"A humildade sustenta tudo."
+— São Bento`
+},
+{
+senha:"panem nostrum",
+link:"https://neal.fun/deep-sea/",
+frase:`"O essencial é invisível."
+— São Gregório de Nissa`
+},
+{
+senha:"libera nos",
+link:"https://www.imdb.com/title/tt0083658/",
+frase:`"A liberdade nasce da disciplina."
+— São Basílio Magno`
+}
+];
+
+// ===== LÓGICA =====
+const hoje = new Date();
+const diff = Math.floor((hoje - dataInicio) / (1000*60*60*24)) + 1;
+const diaLiberado = Math.max(1, Math.min(diff, dias.length));
+
+document.getElementById("contador").innerText =
+"Dia liberado hoje: " + diaLiberado + " / " + dias.length;
+
+function entrar() {
+    const s = document.getElementById("senha").value.toLowerCase().trim();
+    const diaIndex = diaLiberado - 1;
+
+    if (s === dias[diaIndex].senha) {
+        document.getElementById("login").classList.remove("active");
+        document.getElementById("dia").classList.add("active");
+
+        document.getElementById("titulo").innerText = "DIA " + diaLiberado;
+        document.getElementById("link").innerText = "DESCOBERTA DO DIA";
+        document.getElementById("link").href = dias[diaIndex].link;
+        document.getElementById("texto").innerText = dias[diaIndex].frase;
+    } else {
+        alert("SENHA INCORRETA OU DIA AINDA BLOQUEADO");
+    }
+}
+</script>
+
+</body>
+</html>
